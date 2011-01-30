@@ -52,11 +52,11 @@ our $INFO_PLIST = <<EOT;
         <key>CFBundleDevelopmentRegion</key>
         <string>English</string>
         <key>CFBundleExecutable</key>
-        <string>MyFilms</string>
+        <string>{{executable}}</string>
         <key>CFBundleIconFile</key>
-        <string>MyFilms.icns</string>
+        <string>{{icon}}</string>
         <key>CFBundleIdentifier</key>
-        <string>org.mbarbon.MyFilms</string>
+        <string>{{identifier}}</string>
         <key>CFBundleInfoDictionaryVersion</key>
         <string>6.0</string>
         <key>CFBundlePackageType</key>
@@ -64,7 +64,7 @@ our $INFO_PLIST = <<EOT;
         <key>CFBundleSignature</key>
         <string>????</string>
         <key>CFBundleVersion</key>
-        <string>1.02</string>
+        <string>{{version}}</string>
         <key>CSResourcesFileMapped</key>
         <true/>
 </dict>
@@ -268,11 +268,12 @@ sub create_pkginfo {
 }
 
 sub create_info_plist {
-    my( $bundle_dir ) = @_;
+    my( $bundle_dir, $keys ) = @_;
+    ( my $text = $INFO_PLIST ) =~ s[{{(\w+)}}][$keys->{$1}]eg;
 
     require File::Slurp;
 
-    File::Slurp::write_file( "$bundle_dir/Contents/Info.plist", $INFO_PLIST );
+    File::Slurp::write_file( "$bundle_dir/Contents/Info.plist", $text );
 }
 
 sub create_icon {
@@ -361,8 +362,13 @@ sub build_application {
 
     create_bundle( $bundle_dir );
     create_pkginfo( $bundle_dir );
-    create_info_plist( $bundle_dir );
     create_icon( $bundle_dir, $icon, $output . '.icns' );
+    create_info_plist( $bundle_dir,
+                       { executable => $output,
+                         icon       => $output . '.icns',
+                         identifier => 'org.wxperl.' . $output,
+                         version    => $version,
+                         } );
     copy_libraries( $bundle_dir, $modules, $libs,
                     find_all_shared_dependencies( $libs ) );
     copy_scripts( $cfg, Cwd::cwd(), $bundle_dir );
