@@ -163,12 +163,16 @@ sub find_shared_dependencies {
 
 sub find_all_shared_dependencies {
     my( $libs ) = @_;
-    my %libs;
+    my @queue = @$libs;
+    my( %libs, %seen );
 
-    foreach my $bundle ( @$libs ) {
-        my @libs = find_shared_dependencies( $bundle );
+    while( my $lib = shift @queue ) {
+        next if $seen{$lib};
+        my @libs = find_shared_dependencies( $lib );
 
+        push @queue, @libs;
         @libs{@libs} = @libs;
+        $seen{$lib} = 1;
     }
 
     return [ keys %libs ];
