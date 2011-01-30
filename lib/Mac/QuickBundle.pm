@@ -344,9 +344,12 @@ sub build_application {
     my( $modules, $libs ) = scan_dependencies_from_config( $cfg, Cwd::cwd() );
 
     my $output = $cfg->val( 'application', 'name' );
+    my $version = scalar $cfg->val( 'application', 'version' );
     my $bundle_dir = _make_absolute( "$output.app", Cwd::cwd() );
     my $perlwrapper = $cfg->val( 'application', 'perlwrapper',
                                  bundled_perlwrapper() );
+    my $icon = $cfg->val( 'application', 'icon',
+                          "$perlwrapper/Resources/PerlWrapperApp.icns" );
 
     create_bundle( $bundle_dir );
     create_pkginfo( $bundle_dir );
@@ -374,6 +377,14 @@ sections.
 =item name
 
 The name of the application bundle.
+
+=item version
+
+Application version.
+
+=item icon
+
+Application icon (in .icns format).
 
 =item main
 
