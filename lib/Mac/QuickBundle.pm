@@ -275,6 +275,14 @@ sub create_info_plist {
     File::Slurp::write_file( "$bundle_dir/Contents/Info.plist", $INFO_PLIST );
 }
 
+sub create_icon {
+    my( $bundle_dir, $icon, $icon_name ) = @_;
+
+    require File::Copy;
+
+    File::Copy::copy( $icon, "$bundle_dir/Contents/Resources/$icon_name" );
+}
+
 sub fix_libraries {
     my( $perlwrapper, $bundle_dir ) = @_;
 
@@ -354,6 +362,7 @@ sub build_application {
     create_bundle( $bundle_dir );
     create_pkginfo( $bundle_dir );
     create_info_plist( $bundle_dir );
+    create_icon( $bundle_dir, $icon, $output . '.icns' );
     copy_libraries( $bundle_dir, $modules, $libs,
                     find_all_shared_dependencies( $libs ) );
     copy_scripts( $cfg, Cwd::cwd(), $bundle_dir );
