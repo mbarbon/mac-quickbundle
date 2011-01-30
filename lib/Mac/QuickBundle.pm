@@ -165,7 +165,7 @@ sub find_all_shared_dependencies {
     my( $libs ) = @_;
     my %libs;
 
-    foreach my $bundle ( values %$libs ) {
+    foreach my $bundle ( @$libs ) {
         my @libs = find_shared_dependencies( $bundle );
 
         @libs{@libs} = @libs;
@@ -370,7 +370,7 @@ sub build_application {
                          version    => $version,
                          } );
     copy_libraries( $bundle_dir, $modules, $libs,
-                    find_all_shared_dependencies( $libs ) );
+                    find_all_shared_dependencies( [ values %$libs ] ) );
     copy_scripts( $cfg, Cwd::cwd(), $bundle_dir );
     fix_libraries( $perlwrapper, $bundle_dir );
     build_perlwrapper( $perlwrapper, $bundle_dir, $output );
