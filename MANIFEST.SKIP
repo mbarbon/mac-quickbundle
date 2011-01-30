@@ -56,6 +56,8 @@
 ^MYMETA\.
 #!end included /opt/perl/modules/lib/perl5/ExtUtils/MANIFEST.SKIP
 
+^PerlWrapper/build/
+
 # Avoid configuration metadata file
 ^MYMETA\.
 

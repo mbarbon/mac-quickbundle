@@ -5,7 +5,29 @@ use warnings;
 
 use Module::Build;
 
-my $build = Module::Build->new
+my $CODE = <<'EOT';
+sub ACTION_build {
+    my( $self ) = @_;
+
+    $self->SUPER::ACTION_build;
+
+    my $pw_src = 'PerlWrapper';
+    my $pw_dst = 'blib/lib/Mac/QuickBundle/PerlWrapper';
+
+    for my $file ( qw(Source/PerlInterpreter.c Source/PerlInterpreter.h
+                      Source/main.c Tools/update_dylib_references.pl) ) {
+        $self->copy_if_modified( from => "$pw_src/$file",
+                                 to   => "$pw_dst/$file" );
+    }
+}
+EOT
+
+my $class = Module::Build->subclass
+  ( class           => 'My::Build',
+    code            => $CODE,
+    );
+
+my $build = $class->new
   ( module_name     => 'Mac::QuickBundle',
     license         => 'perl',
     requires =>

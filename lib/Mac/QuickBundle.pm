@@ -329,6 +329,13 @@ sub copy_scripts {
     }
 }
 
+sub bundled_perlwrapper {
+    my $mydir = $INC{'Mac/QuickBundle.pm'};
+    ( my $perlwrapper = $mydir ) =~ s{\.pm$}{/PerlWrapper}i;
+
+    return $perlwrapper;
+}
+
 sub build_application {
     my( $cfg ) = @_;
 
@@ -338,7 +345,8 @@ sub build_application {
 
     my $output = $cfg->val( 'application', 'name' );
     my $bundle_dir = _make_absolute( "$output.app", Cwd::cwd() );
-    my $perlwrapper = $cfg->val( 'application', 'perlwrapper' );
+    my $perlwrapper = $cfg->val( 'application', 'perlwrapper',
+                                 bundled_perlwrapper() );
 
     create_bundle( $bundle_dir );
     create_pkginfo( $bundle_dir );
