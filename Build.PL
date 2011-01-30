@@ -15,7 +15,8 @@ sub ACTION_build {
     my $pw_dst = 'blib/lib/Mac/QuickBundle/PerlWrapper';
 
     for my $file ( qw(Source/PerlInterpreter.c Source/PerlInterpreter.h
-                      Source/main.c Tools/update_dylib_references.pl) ) {
+                      Source/main.c Tools/update_dylib_references.pl
+                      Resources/PerlWrapperApp.icns) ) {
         $self->copy_if_modified( from => "$pw_src/$file",
                                  to   => "$pw_dst/$file" );
     }
