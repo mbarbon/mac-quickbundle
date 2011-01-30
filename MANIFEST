@@ -1,0 +1,7 @@
+Build.PL
+Changes
+MANIFEST
+MANIFEST.SKIP
+META.yml
+bin/quickbundle.pl
+lib/Mac/QuickBundle.pm
