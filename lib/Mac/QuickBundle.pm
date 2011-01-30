@@ -373,11 +373,11 @@ sub build_application {
                          identifier => 'org.wxperl.' . $output,
                          version    => $version,
                          } );
+    build_perlwrapper( $perlwrapper, $bundle_dir, $output );
     copy_libraries( $bundle_dir, $modules, $libs,
-                    find_all_shared_dependencies( [ values %$libs ] ) );
+                    find_all_shared_dependencies( [ "$bundle_dir/Contents/MacOS/perl", values %$libs ] ) );
     copy_scripts( $cfg, Cwd::cwd(), $bundle_dir );
     fix_libraries( $perlwrapper, $bundle_dir );
-    build_perlwrapper( $perlwrapper, $bundle_dir, $output );
 }
 
 1;
