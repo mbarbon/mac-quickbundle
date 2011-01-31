@@ -482,4 +482,10 @@ Mattia Barbon <mbarbon@cpan.org>
 This program is free software; you can redistribute it and/or
 modify it under the same terms as Perl itself.
 
+=head1 SOURCES
+
+The latest sources can be found on GitHub at
+L<http://github.com/mbarbon/mac-quickbundle> and
+L<http://github.com/mbarbon/mac-perl-wrapper>
+
 =cut
