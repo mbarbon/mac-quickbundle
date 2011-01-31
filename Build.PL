@@ -5,6 +5,16 @@ use warnings;
 
 use Module::Build;
 
+if( !-d 'PerlWrapper' ) {
+    die <<'EOT';
+PerlWrapper sources not found, please run:
+
+    git clone git://github.com/mbarbon/mac-perl-wrapper.git PerlWrapper
+
+to download them.
+EOT
+}
+
 my $CODE = <<'EOT';
 sub ACTION_build {
     my( $self ) = @_;
