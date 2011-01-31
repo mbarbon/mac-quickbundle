@@ -200,11 +200,17 @@ sub scan_dependencies_from_section {
 
     for my $scandeps ( @scandeps_sections ) {
         my $cache_file = _make_absolute( $cfg->val( $scandeps, 'cache' ), $base_path );
+        my $compile = $cfg->val( $scandeps, 'compile', 0 );
+        my $execute_flag = $cfg->val( $scandeps, 'execute', 0 );
+        my @execute_files = $cfg->val( $scandeps, 'execute_files' );
+        my $execute = @execute_files ? \@execute_files : $execute_flag;
         my @scripts = map _make_absolute( $_, $base_path ),
                           $cfg->val( $scandeps, 'script' );
         my %args = ( files      => \@scripts,
                      cache_file => $cache_file,
                      recurse    => 1,
+                     compile    => $compile,
+                     execute    => $execute,
                      );
         my @inc = map _make_absolute( $_, $base_path ),
                       $cfg->val( $scandeps, 'inc' );
@@ -430,6 +436,11 @@ L<Mac::QuickBundle>.
 
 =over 4
 
+=item scandeps
+
+List of sections containing configuration for L<Module::ScanDeps>, see
+L</scandeps>.
+
 =item dump
 
 B<INTERNAL, DO NOT USE>
@@ -438,11 +449,6 @@ List of dump files, in the format used by L<Module::ScanDeps> and
 created by L<Module::ScanDeps::DataFeed>.
 
     perl -MModule::ScanDeps::DataFeed=my.dump <program>
-
-=item scandeps
-
-List of sections containing configuration for L<Module::ScanDeps>, see
-L</scandeps>.
 
 =back
 
@@ -461,6 +467,15 @@ Additional directories to scan.
 =item cache
 
 L<Module::ScanDeps> cache file path.
+
+=item compile
+
+If true, run files in compile-only mode and inspects C<%INC> to determine
+additional dependencies.
+
+=item execute
+
+Run the script and inspects C<%INC> to determine additional dependencies.
 
 =back
 
