@@ -33,6 +33,19 @@ See L</CONFIGURATION> for a description of the configuration file.
     name=MyFilms
     dependencies=myfilms_dependencies
     main=bin/myfilms
+    languages=<<EOT
+    myfilms_default
+    myfilms_italian
+    EOT
+
+    [myfilms_default]
+    language=default
+    name=MyFilms
+    version=0.02
+
+    [myfilms_italian]
+    language=it
+    copyright=Copyright 2011 Mattia Barbon
 
     [myfilms_dependencies]
     scandeps=myfilms_scandeps
@@ -51,6 +64,8 @@ our $INFO_PLIST = <<EOT;
 <dict>
         <key>CFBundleDevelopmentRegion</key>
         <string>English</string>
+        <key>CFBundleDisplayName</key>
+        <string>{{name}}</string>
         <key>CFBundleExecutable</key>
         <string>{{executable}}</string>
         <key>CFBundleIconFile</key>
@@ -70,6 +85,24 @@ our $INFO_PLIST = <<EOT;
 </dict>
 </plist>
 EOT
+
+our %STRING_KEYS =
+  ( name        => 'CFBundleName',
+    display     => 'CFBundleDisplayName',
+    version     => 'CFBundleShortVersionString',
+    info        => 'CFBundleGetInfoString',
+    copyright   => 'NSHumanReadableCopyright',
+    );
+
+our %LANGUAGES =
+  ( en          => 'English',
+    it          => 'Italian',
+    nl          => 'Dutch',
+    fr          => 'French',
+    de          => 'German',
+    ja          => 'Japanese',
+    es          => 'Spanish',
+    );
 
 sub _find_in_inc {
     my( $file, $inc ) = @_;
@@ -282,8 +315,29 @@ sub create_info_plist {
     ( my $text = $INFO_PLIST ) =~ s[{{(\w+)}}][$keys->{$1}]eg;
 
     require File::Slurp;
+    require Encode;
 
     File::Slurp::write_file( "$bundle_dir/Contents/Info.plist", $text );
+
+    foreach my $lang ( @{$keys->{languages} || []} ) {
+        my $name = $lang->{dir_name};
+        next unless $name; # TODO warn
+
+        my $path = "$bundle_dir/Contents/Resources/$name.lproj";
+        my $text = '';
+
+        foreach my $key ( keys %$lang ) {
+            my $info_key = $STRING_KEYS{$key};
+            next unless $info_key && $lang->{$key};
+
+            $text .= sprintf qq{%s = "%s";\n}, $info_key, $lang->{$key};
+        }
+
+        my $encoded = Encode::encode( 'utf-16', $text );
+
+        File::Path::mkpath( $path );
+        File::Slurp::write_file( "$path/InfoPlist.strings", $encoded );
+    }
 }
 
 sub create_icon {
@@ -355,6 +409,37 @@ sub bundled_perlwrapper {
     return $perlwrapper;
 }
 
+sub read_languages {
+    my( $cfg, @lang ) = @_;
+    my( @res, $default );
+
+    $default = {};
+    foreach my $lang ( @lang ) {
+        my $val = { map { $_ => scalar $cfg->val( $lang, $_, undef ) }
+                        qw(language name display version copyright) };
+        if( $val->{language} eq 'default' ) {
+            $default = $val;
+        } else {
+            $val->{dir_name} = $LANGUAGES{$val->{language}} || $val->{language};
+        }
+
+        push @res, $val;
+    }
+
+    foreach my $lang ( @res ) {
+        while( my( $k, $v ) = each %$default ) {
+            $lang->{$k} ||= $v;
+        }
+
+        if( $lang->{name} && $lang->{version} && $lang->{copyright} ) {
+            $lang->{info} = sprintf qq{%s %s, %s}, $lang->{name},
+                                    $lang->{version}, $lang->{copyright};
+        }
+    }
+
+    return \@res;
+}
+
 sub build_application {
     my( $cfg ) = @_;
 
@@ -369,15 +454,19 @@ sub build_application {
                                  bundled_perlwrapper() );
     my $icon = $cfg->val( 'application', 'icon',
                           "$perlwrapper/Resources/PerlWrapperApp.icns" );
+    my @lang = $cfg->val( 'application', 'languages' );
+    my $languages = read_languages( $cfg, @lang );
 
     create_bundle( $bundle_dir );
     create_pkginfo( $bundle_dir );
     create_icon( $bundle_dir, $icon, $output . '.icns' );
     create_info_plist( $bundle_dir,
                        { executable => $output,
+                         name       => $output,
                          icon       => $output . '.icns',
                          identifier => 'org.wxperl.' . $output,
                          version    => $version,
+                         languages  => $languages,
                          } );
     build_perlwrapper( $perlwrapper, $bundle_dir, $output );
     copy_libraries( $bundle_dir, $modules, $libs,
@@ -426,10 +515,46 @@ F<Contents/Resources/Perl-Scripts/E<lt>scriptnameE<gt>>.
 
 List of sections containing dependency information, see L</dependencies>.
 
+=item languages
+
+List of sections containing language information, see L</languages>.
+
 =item perlwrapper
 
 Path to PerlWrapper sources, defaults to the PerlWrapper bundled with
 L<Mac::QuickBundle>.
+
+=back
+
+=head2 languages
+
+Each language section contains localized strings used when displaying
+information about the bundle.
+
+=over 4
+
+=item language
+
+ISO 639 language code (es. en, it, ko, ...).
+
+As a special case the C<default> language specifies default keys for
+the other languages.
+
+=item name
+
+Short localized application name.
+
+=item display
+
+Longer localized application name, used by Finder, SpotLight, ...
+
+=item version
+
+Human-readable version (es. 12.3, 0.02, ...)
+
+=item copyright
+
+Copyright string (es. Copyright 2011 Yoyodyne corp.)
 
 =back
 
