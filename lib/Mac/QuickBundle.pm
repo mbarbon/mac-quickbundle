@@ -384,6 +384,7 @@ sub build_application {
                     find_all_shared_dependencies( [ "$bundle_dir/Contents/MacOS/perl", values %$libs ] ) );
     copy_scripts( $cfg, Cwd::cwd(), $bundle_dir );
     fix_libraries( $perlwrapper, $bundle_dir );
+    system( 'touch', $bundle_dir );
 }
 
 1;
