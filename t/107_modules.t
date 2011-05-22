@@ -1,9 +1,8 @@
 #!/usr/bin/perl -w
 
 use t::lib::QuickBundle::Test tests => 5;
-use Capture::Tiny qw(capture);
 
-create_bundle( <<EOI );
+create_bundle( <<EOI, 'ExtraModules' );
 [application]
 name=ExtraModules
 version=0.01

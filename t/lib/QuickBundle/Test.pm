@@ -19,11 +19,13 @@ sub import {
 }
 
 sub create_bundle {
-    my( $config ) = @_;
+    my( $config, $bundle ) = @_;
 
     File::Path::mkpath( 't/outdir' );
+    File::Path::rmtree( "t/outdir/$bundle.app" );
     Mac::QuickBundle::build_application
         ( Config::IniFiles->new( -file => \$config ), 't/outdir' );
+    die "Did not create bundle '$bundle'" unless -d "t/outdir/$bundle.app";
 }
 
 1;

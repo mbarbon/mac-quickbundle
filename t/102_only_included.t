@@ -3,7 +3,7 @@
 use t::lib::QuickBundle::Test tests => 3;
 use Capture::Tiny qw(capture);
 
-create_bundle( <<EOI );
+create_bundle( <<EOI, 'Missing' );
 [application]
 name=Missing
 version=0.01

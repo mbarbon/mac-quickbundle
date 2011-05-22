@@ -2,7 +2,7 @@
 
 use t::lib::QuickBundle::Test tests => 3;
 
-create_bundle( <<EOI );
+create_bundle( <<EOI, 'Language' );
 [application]
 name=Language
 version=0.01
