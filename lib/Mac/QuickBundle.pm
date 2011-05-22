@@ -53,7 +53,6 @@ See L</CONFIGURATION> for a description of the configuration file.
     [myfilms_scandeps]
     script=bin/myfilms
     inc=lib
-    cache=myfilms.cache
 
 =cut
 
@@ -232,7 +231,8 @@ sub scan_dependencies_from_section {
     }
 
     for my $scandeps ( @scandeps_sections ) {
-        my $cache_file = _make_absolute( $cfg->val( $scandeps, 'cache' ), $base_path );
+        my $cache_file = $cfg->val( $scandeps, 'cache' );
+        my $cache_path = $cache_file ? _make_absolute( $cache_file, $base_path ) : undef;
         my $compile = $cfg->val( $scandeps, 'compile', 0 );
         my $execute_flag = $cfg->val( $scandeps, 'execute', 0 );
         my @execute_files = $cfg->val( $scandeps, 'execute_files' );
@@ -240,7 +240,7 @@ sub scan_dependencies_from_section {
         my @scripts = map _make_absolute( $_, $base_path ),
                           $cfg->val( $scandeps, 'script' );
         my %args = ( files      => \@scripts,
-                     cache_file => $cache_file,
+                     $cache_file ? ( cache_file => $cache_path ) : (),
                      recurse    => 1,
                      compile    => $compile,
                      execute    => $execute,

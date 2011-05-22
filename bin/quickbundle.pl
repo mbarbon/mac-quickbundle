@@ -33,7 +33,6 @@ And in the configuration file:
     [myfilms_scandeps]
     script=bin/myfilms
     inc=lib
-    cache=myfilms.cache
 
 =head1 DESCRIPTION
 
