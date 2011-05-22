@@ -16,10 +16,10 @@ EOT
 }
 
 my $CODE = <<'EOT';
-sub ACTION_build {
+sub ACTION_code {
     my( $self ) = @_;
 
-    $self->SUPER::ACTION_build;
+    $self->SUPER::ACTION_code;
 
     my $pw_src = 'PerlWrapper';
     my $pw_dst = 'blib/lib/Mac/QuickBundle/PerlWrapper';
