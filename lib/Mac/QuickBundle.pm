@@ -269,10 +269,8 @@ sub scan_dependencies_from_section {
                       $cfg->val( $scandeps, 'inc' );
         my $cache_file = $cfg->val( $scandeps, 'cache' );
         my $cache_path = $cache_file ? _make_absolute( $cache_file, $base_path ) : undef;
-        my $compile = $cfg->val( $scandeps, 'compile', 0 );
+        my $compile_flag = $cfg->val( $scandeps, 'compile', 0 );
         my $execute_flag = $cfg->val( $scandeps, 'execute', 0 );
-        my @execute_files = $cfg->val( $scandeps, 'execute_files' );
-        my $execute = @execute_files ? \@execute_files : $execute_flag;
         my @scripts = map _make_absolute( $_, $base_path ),
                           $cfg->val( $scandeps, 'script' );
         my %modules = map { $_ => _find_in_inc( $_, [ @INC, @inc ] ) }
@@ -281,12 +279,21 @@ sub scan_dependencies_from_section {
         my %args = ( files      => [ @scripts, values %modules ],
                      $cache_file ? ( cache_file => $cache_path ) : (),
                      recurse    => 1,
-                     compile    => $compile,
-                     execute    => $execute,
+                     compile    => $compile_flag,
+                     execute    => $execute_flag,
                      skip       => \%skip,
                      );
 
         push @deps, scan_dependencies( \@scripts, \%args, \@inc );
+
+        # bug/misfeature in Module::ScanDeps: only takes into account the last
+        # executed file, so we must process them one by one
+        foreach my $execute ( values %modules ) {
+            $args{files} = [ $execute ];
+            $args{execute} = 1;
+
+            push @deps, scan_dependencies( \@scripts, \%args, \@inc );
+        }
     }
 
     return @deps;

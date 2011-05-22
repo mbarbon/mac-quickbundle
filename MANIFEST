@@ -16,6 +16,8 @@ t/110_perl.t
 t/120_languages.t
 t/130_compile.t
 t/140_execute.t
+t/145_execute_modules.t
+t/bin/bar.pl
 t/bin/basic.pl
 t/bin/foo.pl
 t/bin/missing.pl
