@@ -103,7 +103,7 @@ our %LANGUAGES =
     es          => 'Spanish',
     );
 
-sub _find_in_inc {
+sub _find_inc_dir {
     my( $file, $inc ) = @_;
 
     for my $path ( @$inc ) {
@@ -145,7 +145,7 @@ sub load_dependencies {
 
     my %dl_shared_objects;
     foreach my $file ( @dl_shared_objects ) {
-        my $key = _find_in_inc( $file, \@incarray );
+        my $key = _find_inc_dir( $file, \@incarray );
 
         $dl_shared_objects{$key} = $file;
     }
@@ -153,7 +153,7 @@ sub load_dependencies {
     my %files;
     foreach my $key ( keys %inchash ) {
         if( $key =~ m{^/} ) {
-            my $k = _find_in_inc( $key, \@incarray );
+            my $k = _find_inc_dir( $key, \@incarray );
 
             $files{$k} = $inchash{$key};
         } else {
