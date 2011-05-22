@@ -103,6 +103,20 @@ our %LANGUAGES =
     es          => 'Spanish',
     );
 
+sub _find_in_inc {
+    my( $module, $inc ) = @_;
+    ( my $file = $module . '.pm' ) =~ s{::}{/}g;
+
+    require File::Spec;
+
+    for my $path ( @$inc ) {
+        my $abs = File::Spec->catfile( $path, $file );
+        return $abs if -f $abs;
+    }
+
+    die "Can't find '$module' in \@INC: @$inc"
+}
+
 sub _find_file_in_inc {
     my( $file, $inc ) = @_;
 
@@ -251,6 +265,8 @@ sub scan_dependencies_from_section {
     }
 
     for my $scandeps ( @scandeps_sections ) {
+        my @inc = map _make_absolute( $_, $base_path ),
+                      $cfg->val( $scandeps, 'inc' );
         my $cache_file = $cfg->val( $scandeps, 'cache' );
         my $cache_path = $cache_file ? _make_absolute( $cache_file, $base_path ) : undef;
         my $compile = $cfg->val( $scandeps, 'compile', 0 );
@@ -259,15 +275,16 @@ sub scan_dependencies_from_section {
         my $execute = @execute_files ? \@execute_files : $execute_flag;
         my @scripts = map _make_absolute( $_, $base_path ),
                           $cfg->val( $scandeps, 'script' );
-        my %args = ( files      => \@scripts,
+        my %modules = map { $_ => _find_in_inc( $_, [ @INC, @inc ] ) }
+                          $cfg->val( $scandeps, 'modules' );
+
+        my %args = ( files      => [ @scripts, values %modules ],
                      $cache_file ? ( cache_file => $cache_path ) : (),
                      recurse    => 1,
                      compile    => $compile,
                      execute    => $execute,
                      skip       => \%skip,
                      );
-        my @inc = map _make_absolute( $_, $base_path ),
-                      $cfg->val( $scandeps, 'inc' );
 
         push @deps, scan_dependencies( \@scripts, \%args, \@inc );
     }
@@ -623,6 +640,10 @@ additional dependencies.
 =item execute
 
 Run the script and inspects C<%INC> to determine additional dependencies.
+
+=item modules
+
+List of additional modules to include.
 
 =back
 

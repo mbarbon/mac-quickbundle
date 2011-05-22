@@ -11,6 +11,7 @@ t/100_basic.t
 t/101_modules.t
 t/102_only_included.t
 t/105_inc.t
+t/107_modules.t
 t/110_perl.t
 t/120_languages.t
 t/130_compile.t
