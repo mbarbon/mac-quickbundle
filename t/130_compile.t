@@ -21,5 +21,5 @@ EOI
 ok( -f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Foo.pm' );
 ok( -f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Bar.pm' );
 ok( !-f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Baz.pm' );
-ok( !-f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Moo.pm' );
-ok( !-f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Boo.pm' );
+ok( -f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Moo.pm' );
+ok( -f 't/outdir/Compile.app/Contents/Resources/Perl-Libraries/Boo.pm' );
