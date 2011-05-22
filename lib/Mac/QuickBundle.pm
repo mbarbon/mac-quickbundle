@@ -284,7 +284,7 @@ sub scan_dependencies_from_section {
                      skip       => \%skip,
                      );
 
-        push @deps, scan_dependencies( \@scripts, \%args, \@inc );
+        push @deps, scan_dependencies( \@scripts, \%args, \@inc ) if @scripts;
 
         # bug/misfeature in Module::ScanDeps: only takes into account the last
         # executed file, so we must process them one by one
@@ -629,7 +629,11 @@ created by L<Module::ScanDeps::DataFeed>.
 
 =item script
 
-Path to the script file.
+Path to the script file (optional).
+
+=item modules
+
+List of additional modules to include (optional).
 
 =item inc
 
@@ -647,10 +651,6 @@ additional dependencies.
 =item execute
 
 Run the script and inspects C<%INC> to determine additional dependencies.
-
-=item modules
-
-List of additional modules to include.
 
 =back
 
