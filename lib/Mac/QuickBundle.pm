@@ -132,6 +132,8 @@ sub scan_dependencies {
     require Module::ScanDeps;
 
     local @Module::ScanDeps::IncludeLibs = @$inc;
+    local $ENV{PERL5LIB} = join( ':', @$inc, $ENV{PERL5LIB} || '' );
+
     my $deps = Module::ScanDeps::scan_deps( %$scandeps );
 
     my( %inchash, %dl_shared_objects );
