@@ -355,7 +355,7 @@ sub fix_libraries {
 
     my $dir = Cwd::cwd();
     chdir "$bundle_dir/Contents/Resources/Perl-Source";
-    system( "$perlwrapper/Tools/update_dylib_references.pl" );
+    system( "$perlwrapper/Tools/update_dylib_references.pl", '-q' );
     chdir $dir;
 }
 
