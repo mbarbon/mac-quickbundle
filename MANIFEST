@@ -15,12 +15,14 @@ t/107_modules.t
 t/110_perl.t
 t/120_languages.t
 t/130_compile.t
+t/140_execute.t
 t/bin/basic.pl
 t/bin/foo.pl
 t/bin/missing.pl
 t/bin/modules.pl
 t/bin/perl.pl
 t/inc/Bar.pm
+t/inc/Baz.pm
 t/inc/Foo.pm
 t/lib/QuickBundle/Test.pm
 

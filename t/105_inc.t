@@ -1,6 +1,6 @@
 #!/usr/bin/perl -w
 
-use t::lib::QuickBundle::Test tests => 2;
+use t::lib::QuickBundle::Test tests => 3;
 use Capture::Tiny qw(capture);
 
 create_bundle( <<EOI );
@@ -20,3 +20,4 @@ EOI
 
 ok( -f 't/outdir/Foo.app/Contents/Resources/Perl-Libraries/Foo.pm' );
 ok( !-f 't/outdir/Foo.app/Contents/Resources/Perl-Libraries/Bar.pm' );
+ok( !-f 't/outdir/Foo.app/Contents/Resources/Perl-Libraries/Baz.pm' );
