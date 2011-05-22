@@ -103,6 +103,19 @@ our %LANGUAGES =
     es          => 'Spanish',
     );
 
+sub _find_file_in_inc {
+    my( $file, $inc ) = @_;
+
+    require File::Spec;
+
+    for my $path ( @$inc ) {
+        my $abs = File::Spec->catfile( $path, $file );
+        return $abs if -f $abs;
+    }
+
+    die "Can't find '$file' in \@INC: @$inc"
+}
+
 sub _find_inc_dir {
     my( $file, $inc ) = @_;
 
@@ -225,6 +238,11 @@ sub scan_dependencies_from_section {
     my @dumps = $cfg->val( $deps_section, 'dump' );
     my @scandeps_sections = $cfg->val( $deps_section, 'scandeps' );
     my @deps;
+    my %skip =
+      ( _find_file_in_inc( 'unicore/mktables', \@INC )     => 1,
+        _find_file_in_inc( 'unicore/mktables.lst', \@INC ) => 1,
+        _find_file_in_inc( 'unicore/TestProp.pl', \@INC )  => 1,
+        );
 
     for my $dump ( @dumps ) {
         push @deps, load_dependencies( _make_absolute( $dump, $base_path ) );
@@ -244,6 +262,7 @@ sub scan_dependencies_from_section {
                      recurse    => 1,
                      compile    => $compile,
                      execute    => $execute,
+                     skip       => \%skip,
                      );
         my @inc = map _make_absolute( $_, $base_path ),
                       $cfg->val( $scandeps, 'inc' );
