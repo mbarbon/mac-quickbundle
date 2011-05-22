@@ -4,3 +4,4 @@ META.*
 MYMETA.*
 _build
 blib
+t/outdir

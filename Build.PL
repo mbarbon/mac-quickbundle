@@ -47,6 +47,9 @@ my $build = $class->new
           'File::Slurp'          => 0,
           'Module::Build'        => 0.28,
            },
+    build_requires =>
+        { 'Capture::Tiny'        => 0,
+          },
     meta_merge =>
         { resources => { 'license'       => 'http://dev.perl.org/licenses/',
                          'repository'    => 'http://github.com/mbarbon/mac-quickbundle',

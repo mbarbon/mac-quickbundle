@@ -6,6 +6,16 @@ META.json
 META.yml
 bin/quickbundle.pl
 lib/Mac/QuickBundle.pm
+t/001_load.t
+t/100_basic.t
+t/101_modules.t
+t/102_only_included.t
+t/110_perl.t
+t/bin/basic.pl
+t/bin/missing.pl
+t/bin/modules.pl
+t/bin/perl.pl
+t/lib/QuickBundle/Test.pm
 
 # bundled PerlWrapper sources
 PerlWrapper/Info.plist
