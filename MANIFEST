@@ -23,7 +23,9 @@ t/bin/modules.pl
 t/bin/perl.pl
 t/inc/Bar.pm
 t/inc/Baz.pm
+t/inc/Boo.pm
 t/inc/Foo.pm
+t/inc/Moo.pm
 t/lib/QuickBundle/Test.pm
 
 # bundled PerlWrapper sources
