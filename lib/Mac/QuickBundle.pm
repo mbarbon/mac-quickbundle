@@ -288,7 +288,7 @@ sub scan_dependencies_from_section {
 
         # bug/misfeature in Module::ScanDeps: only takes into account the last
         # executed file, so we must process them one by one
-        foreach my $execute ( values %modules ) {
+        foreach my $execute ( $execute_flag ? values %modules : () ) {
             $args{files} = [ $execute ];
             $args{execute} = 1;
 
