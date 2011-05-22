@@ -440,9 +440,8 @@ sub read_languages {
             $default = $val;
         } else {
             $val->{dir_name} = $LANGUAGES{$val->{language}} || $val->{language};
+            push @res, $val;
         }
-
-        push @res, $val;
     }
 
     foreach my $lang ( @res ) {
