@@ -1,6 +1,6 @@
 PerlWrapper
 Build
-META.yml
-MYMETA.yml
+META.*
+MYMETA.*
 _build
 blib
