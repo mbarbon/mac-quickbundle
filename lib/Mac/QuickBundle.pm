@@ -441,15 +441,16 @@ sub read_languages {
 }
 
 sub build_application {
-    my( $cfg ) = @_;
+    my( $cfg, $outdir ) = @_;
 
     require Cwd;
+    $outdir ||= Cwd::cwd();
 
     my( $modules, $libs ) = scan_dependencies_from_config( $cfg, Cwd::cwd() );
 
     my $output = $cfg->val( 'application', 'name' );
     my $version = scalar $cfg->val( 'application', 'version' );
-    my $bundle_dir = _make_absolute( "$output.app", Cwd::cwd() );
+    my $bundle_dir = _make_absolute( "$output.app", $outdir );
     my $perlwrapper = $cfg->val( 'application', 'perlwrapper',
                                  bundled_perlwrapper() );
     my $icon = $cfg->val( 'application', 'icon',
