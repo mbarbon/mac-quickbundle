@@ -23,8 +23,9 @@ sub create_bundle {
 
     File::Path::mkpath( 't/outdir' );
     File::Path::rmtree( "t/outdir/$bundle.app" );
+    open my $ini, '<', \$config;
     Mac::QuickBundle::build_application
-        ( Config::IniFiles->new( -file => \$config ), 't/outdir' );
+        ( Config::IniFiles->new( -file => $ini ), 't/outdir' );
     die "Did not create bundle '$bundle'" unless -d "t/outdir/$bundle.app";
 }
 
