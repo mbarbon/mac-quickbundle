@@ -417,9 +417,9 @@ sub build_perlwrapper {
     $ldopts =~ s/(?:^|\s)-lutil(?=\s|$)/ /g;
 
     system( join ' ', "$Config::Config{cc} $ccopts",
-                      "$perlwrapper/Source/PerlInterpreter.c",
-                      "$perlwrapper/Source/main.c -I'$perlwrapper/Source'",
-                      "-Wall -o $bundle_dir/Contents/MacOS/$executable_name",
+                      "'$perlwrapper/Source/PerlInterpreter.c'",
+                      "'$perlwrapper/Source/main.c' -I'$perlwrapper/Source'",
+                      "-Wall -o '$bundle_dir/Contents/MacOS/$executable_name'",
                       "-framework CoreFoundation -framework CoreServices",
                       $ldopts
             );
