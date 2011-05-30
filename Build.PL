@@ -5,6 +5,15 @@ use warnings;
 
 use Module::Build;
 
+if( $^O ne 'darwin' ) {
+    print <<EOT;
+==========================================================
+This module only works under Mac OS X
+==========================================================
+EOT
+    exit 1;
+}
+
 if( !-d 'PerlWrapper' ) {
     die <<'EOT';
 PerlWrapper sources not found, please run:
