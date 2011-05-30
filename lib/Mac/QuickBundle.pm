@@ -414,8 +414,6 @@ sub build_perlwrapper {
     my $ccopts = ExtUtils::Embed::ccopts();
     my $ldopts = ExtUtils::Embed::ldopts();
 
-    $ccopts =~ s/(?:^|\s)-arch\s+\S+/ /g;
-    $ldopts =~ s/(?:^|\s)-arch\s+\S+/ /g;
     $ldopts =~ s/(?:^|\s)-lutil(?=\s|$)/ /g;
 
     system( join ' ', "$Config::Config{cc} $ccopts",
