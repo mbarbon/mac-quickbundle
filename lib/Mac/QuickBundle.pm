@@ -11,7 +11,7 @@ use warnings;
 
 use Exporter 'import';
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 our @EXPORT_OK = qw(scan_dependencies_from_section copy_scripts
                     scan_dependencies load_dependencies merge_dependencies
                     find_shared_dependencies find_all_shared_dependencies
