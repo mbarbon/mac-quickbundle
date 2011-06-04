@@ -6,12 +6,12 @@ use warnings;
 use Module::Build;
 
 if( $^O ne 'darwin' ) {
-    print <<EOT;
+    print <<EOT; # for the user
 ==========================================================
 This module only works under Mac OS X
 ==========================================================
 EOT
-    exit 1;
+    die "OS unsupported"; # for CPAN testers
 }
 
 if( !-d 'PerlWrapper' ) {
